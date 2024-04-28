@@ -1,38 +1,23 @@
 #!/bin/bash
 
-# Check if the data file exists
-if [ ! -f "data.txt" ]; then
-    echo "Error: data.txt file not found."
-    exit 1
-fi
+# Define the sentence
+sentence="The quick brown fox jumps over the lazy dog"
 
-# Initialize variables
-sum=0
-max=0
-total=0
-count=0
+# Convert the sentence to uppercase
+uppercase_sentence=$(echo "$sentence" | tr '[:lower:]' '[:upper:]')
 
-# Process each line in the file
-while IFS=',' read -r _ val2 val3 val4; do
-    # Sum of values in the second column
-    sum=$((sum + val2))
+# Count the number of words in the sentence
+word_count=$(echo "$sentence" | wc -w)
 
-    # Maximum value in the third column
-    if (( val3 > max )); then
-        max=$val3
-    fi
+# Extract the first word from the sentence
+first_word=$(echo "$sentence" | awk '{print $1}')
 
-    # Total sum in the fourth column
-    total=$((total + val4))
-    ((count++))
-done < "data.txt"
+# Replace all occurrences of a specific word with another word
+replaced_sentence=$(echo "$sentence" | sed 's/quick/lazy/g')
 
-# Calculate the average value in the fourth column
-average=$(bc <<< "scale=2; $total / $count")
-
-# Display results
-echo "Sum of values in the second column: $sum"
-echo "Maximum value in the third column: $max"
-echo "Total sum in the fourth column: $total"
-echo "Number of values in the fourth column: $count"
-echo "Average value in the fourth column: $average"
+# Display the results
+echo "Original sentence: $sentence"
+echo "Uppercase sentence: $uppercase_sentence"
+echo "Number of words in the sentence: $word_count"
+echo "First word: $first_word"
+echo "Sentence with 'quick' replaced by 'lazy': $replaced_sentence"

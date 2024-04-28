@@ -1,22 +1,38 @@
 #!/bin/bash
 
-# Define the sentence
-sentence="The quick brown fox jumps over the lazy dog"
+# Check if the data file exists
+if [ ! -f "data.txt" ]; then
+    echo "Error: data.txt file not found."
+    exit 1
+fi
 
-# Convert the sentence to uppercase
-uppercase_sentence=$(echo "$sentence" | tr '[:lower:]' '[:upper:]')
-echo "Uppercase sentence: $uppercase_sentence"
+# Initialize variables
+sum=0
+max=0
+total=0
+count=0
 
-# Count the number of words in the sentence
-word_count=$(echo "$sentence" | wc -w)
-echo "Number of words in the sentence: $word_count"
+# Process each line in the file
+while IFS=',' read -r _ val2 val3 val4; do
+    # Sum of values in the second column
+    sum=$((sum + val2))
 
-# Extract the first word from the sentence
-first_word=$(echo "$sentence" | awk '{print $1}')
-echo "First word: $first_word"
+    # Maximum value in the third column
+    if (( val3 > max )); then
+        max=$val3
+    fi
 
-# Replace all occurrences of a specific word with another word
-old_word="quick"
-new_word="lazy"
-replaced_sentence=$(echo "$sentence" | sed "s/$old_word/$new_word/g")
-echo "Replaced sentence: $replaced_sentence"
+    # Total sum in the fourth column
+    total=$((total + val4))
+    ((count++))
+done < "data.txt"
+
+# Calculate the average value in the fourth column
+average=$(bc <<< "scale=2; $total / $count")
+
+# Display results
+echo "Sum of values in the second column: $sum"
+echo "Maximum value in the third column: $max"
+echo "Total sum in the fourth column: $total"
+echo "Number of values in the fourth column: $count"
+echo "Average value in the fourth column: $average"
